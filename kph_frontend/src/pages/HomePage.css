@@ -1,0 +1,163 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
+}
+
+/* Title Section */
+.title-section {
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #4f3cc9, #2d68f0);
+  color: #fff;
+}
+
+.main-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  font-weight: 300;
+  animation: fadeIn 2s ease-in-out;
+}
+
+/* Content Sections */
+.content-section {
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 1200px;
+}
+
+.content-section h2 {
+  font-size: 1.8rem;
+  color: #333;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Card Container */
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 1.5rem;
+}
+
+/* Cards */
+.card {
+  background-color: #fff;
+  width: 250px;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.card-title {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-image {
+  width: 100%;
+  height: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+
+.info-button {
+  background-color: #2d68f0;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.info-button:hover {
+  background-color: #4f3cc9;
+}
+
+.card-info {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Steps Section */
+.steps-section {
+  background-color: #f0f4ff;
+  padding: 2rem;
+  margin-top: 2rem;
+  border-radius: 10px;
+}
+
+.steps-section h2 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.steps-list {
+  list-style: none;
+  padding: 0;
+  font-size: 1rem;
+  color: #555;
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+.steps-list li {
+  padding: 0.8rem;
+  background: #fff;
+  border-radius: 5px;
+  margin-bottom: 0.8rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .card-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .main-title {
+    font-size: 2rem;
+  }
+
+  .content-section h2 {
+    font-size: 1.5rem;
+  }
+
+  .steps-list li {
+    padding: 0.6rem;
+  }
+}

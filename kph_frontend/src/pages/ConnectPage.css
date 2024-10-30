@@ -1,0 +1,35 @@
+.connect-page {
+    padding: 2rem;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #444;
+  }
+  
+  .connect-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .connect-item a {
+    text-decoration: none;
+    font-size: 1.2rem;
+    color: #0066cc;
+    border: 1px solid #0066cc;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  
+  .connect-item a:hover {
+    background-color: #0066cc;
+    color: white;
+  }
+  

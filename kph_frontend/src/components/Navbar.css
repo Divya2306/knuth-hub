@@ -1,0 +1,112 @@
+/* Base styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Navbar styling */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #282c34;
+  padding: 1rem 2rem;
+  color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Brand and Links */
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #61dafb;
+  cursor: pointer;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.navbar-links a {
+  color: #ffffff;
+  text-decoration: none;
+  position: relative;
+}
+
+.navbar-links a:hover {
+  color: #61dafb;
+  transition: color 0.3s;
+}
+
+/* Animation effect on hover */
+.navbar-links a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background: #61dafb;
+  bottom: -2px;
+  left: 0;
+  transition: width 0.3s;
+}
+
+.navbar-links a:hover::after {
+  width: 100%;
+}
+
+/* Spacing for Profile link */
+.profile-link {
+  margin-left: auto;
+}
+
+/* Toggle Button for small screens */
+.navbar-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  gap: 4px;
+}
+
+.navbar-toggle .bar {
+  width: 25px;
+  height: 3px;
+  background-color: #ffffff;
+  border-radius: 1px;
+  transition: all 0.3s;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+  .navbar-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #282c34;
+  }
+
+  .navbar-links.open {
+    display: flex;
+  }
+
+  .navbar-toggle {
+    display: flex;
+  }
+
+  .navbar-brand,
+  .profile-link {
+    margin: 0 auto;
+  }
+}

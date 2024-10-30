@@ -1,0 +1,64 @@
+.events-page {
+  padding: 20px;
+}
+
+.add-event-btn {
+  background-color: #28a745; /* Green button */
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.add-event-btn:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+.event-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between cards */
+}
+
+.event-card {
+  background-color: #f8f9fa; /* Light background for cards */
+  border: 1px solid #dee2e6; /* Border around cards */
+  border-radius: 5px;
+  padding: 15px;
+  width: calc(33.333% - 20px); /* Responsive card width */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.event-card h3 {
+  margin-top: 0;
+}
+
+.event-card p {
+  margin: 5px 0;
+}
+
+.event-card img {
+  max-width: 100%;
+  border-radius: 5px; /* Rounded corners for images */
+}
+
+.event-card button {
+  background-color: #007bff; /* Blue button for update/delete */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.event-card button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.carousel-item img {
+  max-height: 300px; /* Limit height for carousel images */
+  object-fit: cover; /* Cover the area without distortion */
+}
