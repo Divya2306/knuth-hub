@@ -1,10 +1,9 @@
-// src/pages/EventsPage.js
 import React, { useEffect, useState } from 'react';
 import { Modal } from 'react-bootstrap'; // Using react-bootstrap for modal
 import Carousel from 'react-bootstrap/Carousel'; // Using react-bootstrap for carousel
-import './EventsPage.css'; // Create CSS for styling
+import './EventsPage.css';
 
-const EventsPage = ({isAuthenticated}) => {
+const EventsPage = ({ isAuthenticated }) => {
   const [events, setEvents] = useState([]);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -12,7 +11,7 @@ const EventsPage = ({isAuthenticated}) => {
     title: '',
     description: '',
     date: '',
-    imageUrl: [],
+    imageUrl: '',
   });
   const [currentEventId, setCurrentEventId] = useState(null);
 
@@ -37,12 +36,6 @@ const EventsPage = ({isAuthenticated}) => {
     setEventDetails((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file)); // Create URLs for the uploaded images
-    setEventDetails((prev) => ({ ...prev, imageUrl: imageUrls }));
-  };
-
   const handleAddSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -50,9 +43,9 @@ const EventsPage = ({isAuthenticated}) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}` // Send JWT token
+          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Send JWT token
         },
-        body: JSON.stringify(eventDetails),
+        body: JSON.stringify({ ...eventDetails, imageUrl: eventDetails.imageUrl.split(' ') }), // Convert comma-separated URLs to array
       });
       fetchEvents(); // Refresh the events list
       handleAddClose();
@@ -62,16 +55,15 @@ const EventsPage = ({isAuthenticated}) => {
   };
 
   const handleUpdateSubmit = async (e) => {
-    // console.log(currentEventId);
     e.preventDefault();
     try {
       await fetch(`http://localhost:5000/api/events/${currentEventId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}` // Send JWT token
+          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Send JWT token
         },
-        body: JSON.stringify(eventDetails),
+        body: JSON.stringify({ ...eventDetails, imageUrl: eventDetails.imageUrl.split(' ') }), // Convert comma-separated URLs to array
       });
       fetchEvents(); // Refresh the events list
       handleUpdateClose();
@@ -86,8 +78,8 @@ const EventsPage = ({isAuthenticated}) => {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}` // Send JWT token
-        }
+          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Send JWT token
+        },
       });
       fetchEvents(); // Refresh the events list
     } catch (error) {
@@ -97,12 +89,12 @@ const EventsPage = ({isAuthenticated}) => {
 
   const handleAddClose = () => {
     setShowAddModal(false);
-    setEventDetails({ title: '', description: '', date: '', imageUrl: [] }); // Reset form
+    setEventDetails({ title: '', description: '', date: '', imageUrl: '' }); // Reset form
   };
 
   const handleUpdateClose = () => {
     setShowUpdateModal(false);
-    setEventDetails({ title: '', description: '', date: '', imageUrl: [] }); // Reset form
+    setEventDetails({ title: '', description: '', date: '', imageUrl: '' }); // Reset form
   };
 
   const openUpdateModal = (event) => {
@@ -110,7 +102,7 @@ const EventsPage = ({isAuthenticated}) => {
       title: event.title,
       description: event.description,
       date: event.date.split('T')[0], // Format date for input
-      imageUrl: event.imageUrl,
+      imageUrl: event.imageUrl.join(' '), // Convert array to comma-separated string
     });
     setCurrentEventId(event._id);
     setShowUpdateModal(true);
@@ -121,6 +113,7 @@ const EventsPage = ({isAuthenticated}) => {
       {isAdmin && isAuthenticated && (
         <button onClick={() => setShowAddModal(true)} className="add-event-btn">Add New Event</button>
       )}
+      
       {/* Add Event Modal */}
       <Modal show={showAddModal} onHide={handleAddClose}>
         <Modal.Header closeButton>
@@ -151,10 +144,12 @@ const EventsPage = ({isAuthenticated}) => {
               required
             />
             <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageUpload}
+              type="text"
+              name="imageUrl"
+              value={eventDetails.imageUrl}
+              onChange={handleChange}
+              placeholder="Enter image URLs, separated by commas"
+              required
             />
             <button type="submit">Submit</button>
           </form>
@@ -191,10 +186,12 @@ const EventsPage = ({isAuthenticated}) => {
               required
             />
             <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageUpload}
+              type="text"
+              name="imageUrl"
+              value={eventDetails.imageUrl}
+              onChange={handleChange}
+              placeholder="Enter image URLs, separated by spaces"
+              required
             />
             <button type="submit">Update</button>
           </form>

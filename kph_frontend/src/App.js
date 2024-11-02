@@ -36,8 +36,8 @@ function App() {
             <Route path="/coordinators" element={<CoordinatorsPage isAuthenticated={isAuthenticated}/>} />
             <Route path="/announcements" element={<AnnouncementsPage isAuthenticated={isAuthenticated}/>} />
             <Route path="/connect" element={<ConnectPage />} />
-            <Route path="/feedback" element={<FeedbackPage />} />
-            <Route path="/pod" element={<PODPage />} />
+            <Route path="/feedback" element={<FeedbackPage isAuthenticated={isAuthenticated} />} />
+            <Route path="/pod" element={<PODPage isAuthenticated={isAuthenticated}/>} />
           </Routes>
         </main>
         <Footer />
