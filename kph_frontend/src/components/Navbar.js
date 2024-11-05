@@ -1,10 +1,10 @@
-import React, {  useState } from 'react';
-import { Link , useNavigate} from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
-const Navbar = ({ setIsAuthenticated , isAuthenticated}) => {
+const Navbar = ({ setIsAuthenticated, isAuthenticated }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate= useNavigate();
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -18,21 +18,21 @@ const Navbar = ({ setIsAuthenticated , isAuthenticated}) => {
     <header className="navbar">
       <div className="navbar-brand">Knuth Programming Hub</div>
       <nav className={`navbar-links ${isOpen ? 'open' : ''}`}>
-        <Link to="/">Home</Link>
-        <Link to="/events">Events</Link>
-        <Link to="/announcements">Announcements</Link>
-        <Link to="/coordinators">Coordinators</Link>
-        <Link to="/pod">POD</Link>
-        <Link to="/feedback">Feedback</Link>
-        <Link to="/connect">Connect</Link>
+        <Link to="/"><i className="fas fa-home"></i> Home</Link>
+        <Link to="/events"><i className="fas fa-calendar-alt"></i> Events</Link>
+        <Link to="/announcements"><i className="fas fa-bullhorn"></i> Announcements</Link>
+        <Link to="/coordinators"><i className="fas fa-users"></i> Coordinators</Link>
+        <Link to="/pod"><i className="fas fa-tasks"></i> POD</Link>
+        <Link to="/feedback"><i className="fas fa-comment-dots"></i> Feedback</Link>
+        <Link to="/connect"><i className="fas fa-link"></i> Connect</Link>
         
         {isAuthenticated ? (
           <div className="auth-links">
-            <Link to="/profile">Profile</Link>
-            <button onClick={handleLogout} className="logout-btn">Logout</button>
+            <Link to="/profile"><i className="fas fa-user"></i> Profile</Link>
+            <button onClick={handleLogout} className="logout-btn"><i className="fas fa-sign-out-alt"></i> Logout</button>
           </div>
         ) : (
-          <Link to="/login">Login</Link>
+          <Link to="/login"><i className="fas fa-sign-in-alt"></i> Login</Link>
         )}
       </nav>
       
