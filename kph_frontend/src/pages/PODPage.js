@@ -11,7 +11,7 @@ const PODPage = ({ isAuthenticated }) => {
   // Fetch problems from API
   const fetchPOD = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/pod');
+      const response = await fetch('https://knuth-hub.onrender.com/api/pod');
       const data = await response.json();
       setPodList(data);
     } catch (error) {
@@ -33,7 +33,7 @@ const PODPage = ({ isAuthenticated }) => {
   const handleAddProblem = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/pod', {
+      const response = await fetch('https://knuth-hub.onrender.com/api/pod', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,7 +56,7 @@ const PODPage = ({ isAuthenticated }) => {
   // Delete a problem
   const handleDeleteProblem = async (problemId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/pod/${problemId}`, {
+      const response = await fetch(`https://knuth-hub.onrender.com/api/pod/${problemId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,

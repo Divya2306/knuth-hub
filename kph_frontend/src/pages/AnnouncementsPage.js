@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Modal } from "react-bootstrap"; // Modal for adding/updating announcements
-import Carousel from "react-bootstrap/Carousel"; // Carousel for images
-import "./AnnouncementsPage.css"; // Custom CSS for styling
+import { Modal } from "react-bootstrap"; 
+import Carousel from "react-bootstrap/Carousel"; 
+import "./AnnouncementsPage.css";
 
 const AnnouncementsPage = ({ isAuthenticated }) => {
   const [announcements, setAnnouncements] = useState([]);
@@ -10,7 +10,7 @@ const AnnouncementsPage = ({ isAuthenticated }) => {
   const [announcementDetails, setAnnouncementDetails] = useState({
     title: "",
     content: "",
-    date: "",
+    date: new Date().toISOString().split("T")[0],
     images: [],
   });
   const [currentAnnouncementId, setCurrentAnnouncementId] = useState(null);
@@ -23,7 +23,7 @@ const AnnouncementsPage = ({ isAuthenticated }) => {
 
   const fetchAnnouncements = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/announcements");
+      const response = await fetch("https://knuth-hub.onrender.com/api/announcements");
       const data = await response.json();
       setAnnouncements(data);
     } catch (error) {
@@ -36,21 +36,31 @@ const AnnouncementsPage = ({ isAuthenticated }) => {
     setAnnouncementDetails((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImageUrlsChange = (e) => {
-    const urls = e.target.value.split(" ");
-    setAnnouncementDetails((prev) => ({ ...prev, images: urls }));
+  const handleFileChange = (e) => {
+    setAnnouncementDetails((prev) => ({ ...prev, images: e.target.files }));
   };
+
 
   const handleAddSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('title', announcementDetails.title);
+    formData.append('description', announcementDetails.description);
+    formData.append('date', announcementDetails.date || new Date().toISOString());
+
+    for (let i = 0; i < announcementDetails.images.length; i++) {
+      formData.append('images', announcementDetails.images[i]);
+    }
+
     try {
-      await fetch("http://localhost:5000/api/announcements", {
+      await fetch("https://knuth-hub.onrender.com/api/announcements", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
-        body: JSON.stringify(announcementDetails),
+        body: formData,
       });
       fetchAnnouncements();
       handleAddClose();
@@ -61,16 +71,26 @@ const AnnouncementsPage = ({ isAuthenticated }) => {
 
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('title', announcementDetails.title);
+    formData.append('description', announcementDetails.description);
+    formData.append('date', announcementDetails.date || new Date().toISOString());
+
+    for (let i = 0; i < announcementDetails.images.length; i++) {
+      formData.append('images', announcementDetails.images[i]);
+    }
+
     try {
       await fetch(
-        `http://localhost:5000/api/announcements/${currentAnnouncementId}`,
+        `https://knuth-hub.onrender.com/api/announcements/${currentAnnouncementId}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify(announcementDetails),
+          body: formData,
         }
       );
       fetchAnnouncements();
@@ -81,13 +101,15 @@ const AnnouncementsPage = ({ isAuthenticated }) => {
   };
 
   const handleDelete = async (announcementId) => {
+    if (!window.confirm('Are you sure you want to delete this event?')) return;
     try {
-      await fetch(`http://localhost:5000/api/announcements/${announcementId}`, {
+      const response = await fetch(`https://knuth-hub.onrender.com/api/announcements/${announcementId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
+      if (!response.ok) throw new Error('Failed to delete event');
       fetchAnnouncements();
     } catch (error) {
       console.error("Error deleting announcement", error);
@@ -109,7 +131,7 @@ const AnnouncementsPage = ({ isAuthenticated }) => {
       title: announcement.title,
       content: announcement.content,
       date: announcement.date.split("T")[0],
-      images: announcement.images,
+      images: [],
     });
     setCurrentAnnouncementId(announcement._id);
     setShowUpdateModal(true);
@@ -153,14 +175,14 @@ const AnnouncementsPage = ({ isAuthenticated }) => {
               name="date"
               value={announcementDetails.date}
               onChange={handleChange}
-              required
+              
             />
-            <input
-              type="text"
+           <input
+              type="file"
               name="images"
-              value={announcementDetails.images.join(" ")}
-              onChange={handleImageUrlsChange}
-              placeholder="Enter image URLs separated by space"
+              onChange={handleFileChange}
+              multiple
+              required
             />
 
             <button type="submit">Submit</button>
@@ -195,14 +217,14 @@ const AnnouncementsPage = ({ isAuthenticated }) => {
               name="date"
               value={announcementDetails.date}
               onChange={handleChange}
-              required
+              
             />
             <input
-              type="text"
+              type="file"
               name="images"
-              value={announcementDetails.images.join(" ")}
-              onChange={handleImageUrlsChange}
-              placeholder="Enter image URLs separated by space"
+              onChange={handleFileChange}
+              multiple
+              required
             />
 
             <button type="submit">Update</button>
@@ -217,13 +239,9 @@ const AnnouncementsPage = ({ isAuthenticated }) => {
             <p>{announcement.content}</p>
             <p>{new Date(announcement.date).toLocaleDateString()}</p>
             <Carousel>
-              {announcement.images.map((url, index) => (
+              {announcement.AnImages.map((url, index) => (
                 <Carousel.Item key={index}>
-                  <img
-                    className="d-block w-100"
-                    src={url}
-                    alt={`Announcement-image ${index + 1}`}
-                  />
+                  <img className="d-block w-100" src={`https://knuth-hub.onrender.com/${url}`} alt={`Announcement-image ${index + 1}`} />
                 </Carousel.Item>
               ))}
             </Carousel>

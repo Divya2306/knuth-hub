@@ -1,6 +1,6 @@
-// src/pages/Register.js
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import './RegisterPage.css';
 
 function Register() {
   const [userInfo, setUserInfo] = useState({
@@ -26,7 +26,7 @@ function Register() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/users/register', {
+      const response = await fetch('https://knuth-hub.onrender.com/api/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -46,46 +46,60 @@ function Register() {
   };
 
   return (
-    <div>
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          value={userInfo.name}
-          onChange={handleChange}
-          placeholder="Name"
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          value={userInfo.email}
-          onChange={handleChange}
-          placeholder="Email"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          value={userInfo.password}
-          onChange={handleChange}
-          placeholder="Password"
-          required
-        />
-        <input
-          type="password"
-          name="confirmPassword"
-          value={userInfo.confirmPassword}
-          onChange={handleChange}
-          placeholder="Confirm Password"
-          required
-        />
-        <button type="submit">Register</button>
-        <p>
-          Already have an account? <Link to="/login">Login</Link>
-        </p>
-      </form>
+    <div className="register-container">
+      <div className="register-card">
+        <h2>Register</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <i className="fas fa-user"></i>
+            <input
+              type="text"
+              name="name"
+              value={userInfo.name}
+              onChange={handleChange}
+              placeholder="Name"
+              required
+            />
+          </div>
+          <div className="input-group">
+            <i className="fas fa-envelope"></i>
+            <input
+              type="email"
+              name="email"
+              value={userInfo.email}
+              onChange={handleChange}
+              placeholder="Email"
+              required
+            />
+          </div>
+          <div className="input-group">
+            <i className="fas fa-lock"></i>
+            <input
+              type="password"
+              name="password"
+              value={userInfo.password}
+              onChange={handleChange}
+              placeholder="Password"
+              required
+            />
+          </div>
+          <div className="input-group">
+            <i className="fas fa-lock"></i>
+            <input
+              type="password"
+              name="confirmPassword"
+              value={userInfo.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm Password"
+              required
+            />
+          </div>
+          <button type="submit" className="register-button">Register</button>
+          <p>
+            Already have an account? <Link to="/login">Login</Link>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }

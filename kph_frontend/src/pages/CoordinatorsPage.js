@@ -13,7 +13,7 @@ const CoordinatorsPage = ({ isAuthenticated }) => {
 
   const fetchCoordinators = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/coordinators/${page}`);
+      const response = await fetch(`https://knuth-hub.onrender.com/api/coordinators/${page}`);
       if (response.ok) {
         const data = await response.json();
         setCoordinators(data.coordinators);
@@ -53,7 +53,7 @@ const CoordinatorsPage = ({ isAuthenticated }) => {
   const handleAddCoordinator = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/coordinators', {
+      const response = await fetch('https://knuth-hub.onrender.com/api/coordinators', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -20,7 +20,7 @@ const FeedbackPage = ({ isAuthenticated }) => {
   // Fetch feedbacks from the backend for admin view
   const fetchFeedbacks = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/feedbacks');
+      const response = await fetch('https://knuth-hub.onrender.com/api/feedbacks');
       const data = await response.json();
       setFeedbacks(data);
     } catch (error) {
@@ -38,7 +38,7 @@ const FeedbackPage = ({ isAuthenticated }) => {
   const handleSubmitFeedback = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/feedbacks', {
+      const response = await fetch('https://knuth-hub.onrender.com/api/feedbacks', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ const FeedbackPage = ({ isAuthenticated }) => {
   // Delete feedback by ID for admin
   const handleDeleteFeedback = async (feedbackId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/feedbacks/${feedbackId}`, {
+      const response = await fetch(`https://knuth-hub.onrender.com/api/feedbacks/${feedbackId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,

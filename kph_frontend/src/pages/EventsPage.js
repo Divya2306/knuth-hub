@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal } from 'react-bootstrap'; // Using react-bootstrap for modal
-import Carousel from 'react-bootstrap/Carousel'; // Using react-bootstrap for carousel
+import { Modal, Carousel } from 'react-bootstrap';
 import './EventsPage.css';
 
 const EventsPage = ({ isAuthenticated }) => {
@@ -11,11 +10,11 @@ const EventsPage = ({ isAuthenticated }) => {
     title: '',
     description: '',
     date: '',
-    imageUrl: '',
+    images: [],
   });
   const [currentEventId, setCurrentEventId] = useState(null);
 
-  const isAdmin = localStorage.getItem('role') === 'admin'; // Check if user is admin
+  const isAdmin = localStorage.getItem('role') === 'admin';
 
   useEffect(() => {
     fetchEvents();
@@ -23,11 +22,12 @@ const EventsPage = ({ isAuthenticated }) => {
 
   const fetchEvents = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/events'); // Get all events
+      const response = await fetch('https://knuth-hub.onrender.com/api/events');
+      if (!response.ok) throw new Error('Failed to fetch events');
       const data = await response.json();
       setEvents(data);
     } catch (error) {
-      console.error('Error fetching events', error);
+      console.error('Error fetching events:', error);
     }
   };
 
@@ -36,82 +36,112 @@ const EventsPage = ({ isAuthenticated }) => {
     setEventDetails((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleFileChange = (e) => {
+    setEventDetails((prev) => ({ ...prev, images: e.target.files }));
+  };
+
   const handleAddSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append('title', eventDetails.title);
+    formData.append('description', eventDetails.description);
+    formData.append('date', eventDetails.date || new Date().toISOString());
+
+    for (let i = 0; i < eventDetails.images.length; i++) {
+      formData.append('images', eventDetails.images[i]);
+    }
+
     try {
-      await fetch('http://localhost:5000/api/events', {
+      const response = await fetch('https://knuth-hub.onrender.com/api/events', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Send JWT token
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({ ...eventDetails, imageUrl: eventDetails.imageUrl.split(' ') }), // Convert comma-separated URLs to array
+        body: formData,
       });
-      fetchEvents(); // Refresh the events list
+      if (!response.ok) throw new Error('Failed to create event');
+      fetchEvents();
       handleAddClose();
     } catch (error) {
-      console.error('Error creating event', error);
+      console.error('Error creating event:', error);
     }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this event?')) return;
+    try {
+      const response = await fetch(`https://knuth-hub.onrender.com/api/events/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      if (!response.ok) throw new Error('Failed to delete event');
+      fetchEvents();
+    } catch (error) {
+      console.error('Error deleting event:', error);
+    }
+  };
+
+  const openUpdateModal = (event) => {
+    setCurrentEventId(event._id);
+    setEventDetails({
+      title: event.title,
+      description: event.description,
+      date: event.date,
+      images: [],
+    });
+    setShowUpdateModal(true);
   };
 
   const handleUpdateSubmit = async (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append('title', eventDetails.title);
+    formData.append('description', eventDetails.description);
+    formData.append('date', eventDetails.date || new Date().toISOString());
+
+    for (let i = 0; i < eventDetails.images.length; i++) {
+      formData.append('images', eventDetails.images[i]);
+    }
+
     try {
-      await fetch(`http://localhost:5000/api/events/${currentEventId}`, {
+      const response = await fetch(`https://knuth-hub.onrender.com/api/events/${currentEventId}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Send JWT token
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
-        body: JSON.stringify({ ...eventDetails, imageUrl: eventDetails.imageUrl.split(' ') }), // Convert comma-separated URLs to array
+        body: formData,
       });
-      fetchEvents(); // Refresh the events list
+      if (!response.ok) throw new Error('Failed to update event');
+      fetchEvents();
       handleUpdateClose();
     } catch (error) {
-      console.error('Error updating event', error);
-    }
-  };
-
-  const handleDelete = async (eventId) => {
-    try {
-      await fetch(`http://localhost:5000/api/events/${eventId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Send JWT token
-        },
-      });
-      fetchEvents(); // Refresh the events list
-    } catch (error) {
-      console.error('Error deleting event', error);
+      console.error('Error updating event:', error);
     }
   };
 
   const handleAddClose = () => {
     setShowAddModal(false);
-    setEventDetails({ title: '', description: '', date: '', imageUrl: '' }); // Reset form
+    resetEventDetails();
   };
 
   const handleUpdateClose = () => {
     setShowUpdateModal(false);
-    setEventDetails({ title: '', description: '', date: '', imageUrl: '' }); // Reset form
+    resetEventDetails();
+    setCurrentEventId(null);
   };
 
-  const openUpdateModal = (event) => {
-    setEventDetails({
-      title: event.title,
-      description: event.description,
-      date: event.date.split('T')[0], // Format date for input
-      imageUrl: event.imageUrl.join(' '), // Convert array to comma-separated string
-    });
-    setCurrentEventId(event._id);
-    setShowUpdateModal(true);
+  const resetEventDetails = () => {
+    setEventDetails({ title: '', description: '', date: '', images: [] });
   };
 
   return (
     <div className="events-page">
       {isAdmin && isAuthenticated && (
-        <button onClick={() => setShowAddModal(true)} className="add-event-btn">Add New Event</button>
+        <button onClick={() => setShowAddModal(true)} className="add-event-btn">
+          Add New Event
+        </button>
       )}
       
       {/* Add Event Modal */}
@@ -144,11 +174,10 @@ const EventsPage = ({ isAuthenticated }) => {
               required
             />
             <input
-              type="text"
-              name="imageUrl"
-              value={eventDetails.imageUrl}
-              onChange={handleChange}
-              placeholder="Enter image URLs, separated by commas"
+              type="file"
+              name="images"
+              onChange={handleFileChange}
+              multiple
               required
             />
             <button type="submit">Submit</button>
@@ -186,18 +215,17 @@ const EventsPage = ({ isAuthenticated }) => {
               required
             />
             <input
-              type="text"
-              name="imageUrl"
-              value={eventDetails.imageUrl}
-              onChange={handleChange}
-              placeholder="Enter image URLs, separated by spaces"
-              required
+              type="file"
+              name="images"
+              onChange={handleFileChange}
+              multiple
             />
             <button type="submit">Update</button>
           </form>
         </Modal.Body>
       </Modal>
 
+      {/* Event Cards Display */}
       <div className="event-cards">
         {events.map((event) => (
           <div key={event._id} className="event-card">
@@ -207,7 +235,7 @@ const EventsPage = ({ isAuthenticated }) => {
             <Carousel>
               {event.imageUrl.map((url, index) => (
                 <Carousel.Item key={index}>
-                  <img className="d-block w-100" src={url} alt={`Event-image ${index + 1}`} />
+                  <img className="d-block w-100" src={`https://knuth-hub.onrender.com/${url}`} alt={`Event-image ${index + 1}`} />
                 </Carousel.Item>
               ))}
             </Carousel>

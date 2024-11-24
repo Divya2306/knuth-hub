@@ -11,6 +11,7 @@ const announcementRoutes = require('./routes/announcements');
 const feedbackRoutes = require('./routes/feedbacks');
 const podRoutes = require('./routes/pods');
 const app = express();
+const path = require('path');
 
 // Load environment variables
 dotenv.config();
@@ -22,6 +23,8 @@ connectDB();
 // Middleware
 app.use(cors());
 app.use(express.json()); // Parses incoming JSON requests
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 app.use('/api/users', userRoutes);
 app.use('/api/websites', websiteRoutes);

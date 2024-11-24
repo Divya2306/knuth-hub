@@ -8,7 +8,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/users/profile', {
+        const response = await fetch('https://knuth-hub.onrender.com/api/users/profile', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
